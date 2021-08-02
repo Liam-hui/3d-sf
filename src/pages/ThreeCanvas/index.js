@@ -18,12 +18,17 @@ const SCENE_DATA = {
   '/': {
     color: '#7FFFF9',
     cameraPos: null,
-    cameraRot: null
+    cameraRot: [-Math.PI * 0.2, 0, 0]
   },
   '/about': {
     color: 'red',
     cameraPos: new THREE.Vector3(0, 23, 15),
-    cameraRot: new THREE.Vector3(-Math.PI * 0.2, -Math.PI * 0.6, 0)
+    cameraRot: [-Math.PI * 0.2, -Math.PI * 0.6, 0]
+  },
+  '/projects': {
+    color: 'green',
+    cameraPos: new THREE.Vector3(0, 3, 5),
+    cameraRot: [-Math.PI * 0.2, Math.PI * 0.6, 0]
   }
 }
 
@@ -65,11 +70,10 @@ const Camera = ({ cameraRef, sceneRef }) => {
   useFrame(() => {
     if (sceneRef.current.cameraPos)
       cameraRef.current.position.lerp(sceneRef.current.cameraPos, 0.03)
-    // if (sceneRef.current.cameraRot) {
-    //   const quaternion = new THREE.Quaternion()
-    //   quaternion.setFromEuler(new THREE.Euler(sceneRef.current.cameraRot))
-    //   cameraRef.current.quaternion.slerp(quaternion, 0.05)
-    // }
+
+    const quaternion = new THREE.Quaternion()
+    quaternion.setFromEuler(new THREE.Euler(sceneRef.current.cameraRot[0], sceneRef.current.cameraRot[1], sceneRef.current.cameraRot[2]))
+    cameraRef.current.quaternion.slerp(quaternion, 0.05)
   })
 
   return (
