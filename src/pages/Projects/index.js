@@ -1,6 +1,10 @@
 import React, { useMemo, useEffect, useRef, Suspense } from 'react'
 import { useHistory } from "react-router-dom"
 
+import {
+  ContentContainer
+} from './styles'
+
 export default function Projects() {
 
   const history = useHistory()
@@ -14,6 +18,10 @@ export default function Projects() {
       <div onClick={onClick} className='back-button'>
         back
       </div>
+      <ContentContainer>
+        <p>Projects</p>
+        <p>asdfasdf</p>
+      </ContentContainer>
     </div>
   )
 }

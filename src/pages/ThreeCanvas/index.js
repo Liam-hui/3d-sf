@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useCallback, Suspense } from 'react';
 import * as THREE from 'three'
 import { isMobile } from "react-device-detect"
 import { Canvas, useThree, useFrame } from "@react-three/fiber"
+import { OrbitControls } from '@react-three/drei';
 import { Physics, usePlane } from "@react-three/cannon"
 import { useLocation, useHistory } from "react-router-dom"
 
@@ -22,13 +23,13 @@ const SCENE_DATA = {
   },
   '/about': {
     color: 'red',
-    cameraPos: new THREE.Vector3(0, 23, 15),
-    cameraRot: [-Math.PI * 0.2, -Math.PI * 0.6, 0]
+    cameraPos: new THREE.Vector3(10.67, 12.7, -4.51),
+    cameraRot: [-0.754, -0.059, -0.056]
   },
   '/projects': {
     color: 'green',
-    cameraPos: new THREE.Vector3(0, 3, 5),
-    cameraRot: [-Math.PI * 0.2, Math.PI * 0.6, 0]
+    cameraPos: new THREE.Vector3(-5.83, 15.43, -6.89),
+    cameraRot: [-0.7, 0.18, 0.15]
   }
 }
 
@@ -134,6 +135,7 @@ const ThreeCanvas = () => {
   }, [])
 
   const onMouseDown = (e) => {
+    // console.log(cameraRef.current)
     updateMousePosition(e)
     window.addEventListener("mousemove", updateMousePosition)
   }
@@ -151,25 +153,39 @@ const ThreeCanvas = () => {
     updateMousePosition(e.targetTouches[0])
   }
 
+  // useEffect(() => {
+  //   sceneRef.current = SCENE_DATA[location.pathname]
+
+  //   if (location.pathname == '/') {
+  //     mouseObjectRef.current && mouseObjectRef.current.goBack()
+  //     if (!isMobile) {
+  //       window.addEventListener("keydown", onKeyDown)
+  //       window.addEventListener("keyup", onKeyUp)
+  //     }
+  //   }
+  //   else {
+  //     mouseRef.current = null
+  //     keyRef.current = []
+  //     if (!isMobile) {
+  //       window.removeEventListener("mousemove", updateMousePosition)
+  //       window.removeEventListener("keydown", onKeyDown)
+  //       window.removeEventListener("keyup", onKeyUp)
+  //     }
+  //   }
+  // }, [location])
+
+  useEffect(() => {
+    window.addEventListener("keydown", onKeyDown)
+    window.addEventListener("keyup", onKeyUp)
+  }, [location])
+
   useEffect(() => {
     sceneRef.current = SCENE_DATA[location.pathname]
 
     if (location.pathname == '/') {
       mouseObjectRef.current && mouseObjectRef.current.goBack()
-      if (!isMobile) {
-        window.addEventListener("keydown", onKeyDown)
-        window.addEventListener("keyup", onKeyUp)
-      }
     }
-    else {
-      mouseRef.current = null
-      keyRef.current = []
-      if (!isMobile) {
-        window.removeEventListener("mousemove", updateMousePosition)
-        window.removeEventListener("keydown", onKeyDown)
-        window.removeEventListener("keyup", onKeyUp)
-      }
-    }
+
   }, [location])
 
   const goToRoute = (pathname) => {

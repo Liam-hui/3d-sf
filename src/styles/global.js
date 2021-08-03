@@ -31,6 +31,10 @@ const GlobalStyle = createGlobalStyle`
     top: 0;
     left: 0;
     animation: fadeIn 0.5s;
+    pointer-events: none;
+    * {
+      pointer-events: auto;
+    }
     .back-button {
       position: absolute;
       top: 5px;
