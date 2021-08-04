@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
-import { useLocation } from "react-router-dom"
+import store from '@/store';
+import { useSelector } from 'react-redux'
 
 import {
   Container
@@ -12,13 +13,13 @@ import Projects from '@/pages/Projects'
 
 export default function Home() {
 
-  const location = useLocation()
+  const location = useSelector(state => state.location.current)
 
   return (
     <Container>
       <ThreeCanvas/>
-      {location.pathname.includes('about') && <About/>}
-      {location.pathname.includes('projects') && <Projects/>}
+      {location == 'about' && <About/>}
+      {location == 'projects' && <Projects/>}
     </Container>
   )
 }

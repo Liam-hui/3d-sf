@@ -3,6 +3,7 @@ import { Switch, Route, useLocation } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 
 import Menu from '@/components/Menu'
+import Dots from '@/components/Dots'
 import Logo from '@/components/Logo'
 import Home from '@/pages/Home'
 import About from '@/pages/About'
@@ -21,6 +22,7 @@ const Routes = () => {
       </Switch>
       <Logo/>
       <Menu/>
+      <Dots/>
     </ConnectedRouter>
   )
 

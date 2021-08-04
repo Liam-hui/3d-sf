@@ -98,7 +98,7 @@ const MouseObject = React.forwardRef( (props, ref) => {
         isHomeRef.current = false
       }
       if (intersect == null && !isHomeRef.current) {
-        goToRoute('')
+        goToRoute('home')
         isHomeRef.current = true
       } 
 
