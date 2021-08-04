@@ -2,6 +2,8 @@ import React from 'react'
 import { Switch, Route, useLocation } from 'react-router-dom'
 import { ConnectedRouter } from 'connected-react-router'
 
+import Menu from '@/components/Menu'
+import Logo from '@/components/Logo'
 import Home from '@/pages/Home'
 import About from '@/pages/About'
 
@@ -17,6 +19,8 @@ const Routes = () => {
       <Switch>
         <Route path="/" component={Home} />
       </Switch>
+      <Logo/>
+      <Menu/>
     </ConnectedRouter>
   )
 

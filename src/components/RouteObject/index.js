@@ -21,7 +21,7 @@ export default function RouteObject(props) {
     <group {...props} >
       <mesh name={name} position={0, 8, 0}>
         <boxGeometry args={[16, 16, 16]}/>
-        <meshBasicMaterial color='blue' transparent opacity={0.5}/>
+        <meshBasicMaterial color='blue' transparent opacity={0}/>
       </mesh>
       <mesh ref={textRef} position={[0, 2, 0]} castShadow>
         <textGeometry args={[name, config]} />

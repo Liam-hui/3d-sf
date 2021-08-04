@@ -17,13 +17,13 @@ import Box from '@/components/Box'
 
 const SCENE_DATA = {
   '/': {
-    color: '#7FFFF9',
+    color: '#012a36',
     cameraPos: null,
     cameraRot: [-Math.PI * 0.2, 0, 0]
   },
   '/about': {
-    color: 'red',
-    cameraPos: new THREE.Vector3(10.67, 12.7, -4.51),
+    color: '#1d4f3d',
+    cameraPos: new THREE.Vector3(4.67, 12.7, -4.51),
     cameraRot: [-0.754, -0.059, -0.056]
   },
   '/projects': {
@@ -53,8 +53,8 @@ const Ground = ({ groundRef, sceneRef }) => {
         <meshStandardMaterial attach="material" opacity={0} />
       </mesh>
       <mesh ref={planeRef} receiveShadow>
-        <planeBufferGeometry attach="geometry" args={[350, 350]} />
-        <meshStandardMaterial ref={materialRef} attach="material" color={'white'} />
+        <planeBufferGeometry attach="geometry" args={[450, 450]} />
+        <meshStandardMaterial ref={materialRef} attach="material" color={'#012a36'} />
       </mesh>
     </>
   )
@@ -204,7 +204,7 @@ const ThreeCanvas = () => {
       <Canvas shadows>
         <Camera cameraRef={cameraRef} sceneRef={sceneRef}/>
         <color attach="background" args={['white']} />
-        <ambientLight intensity={0.4} />
+        <ambientLight intensity={1} />
         <spotLight 
           intensity={0.6} 
           position={[0, 150, 0]} 
@@ -237,7 +237,6 @@ const ThreeCanvas = () => {
             </group>
             <Box position={[-15, 0, 10]} rotation={[0, -Math.PI * 0.2, 0]}/>
             <Box position={[20, 0, 20]} />
-            {/* <RouteObject position={[-15, 0, -15]}/> */}
           </Physics>
         </Suspense>
         {/* <OrbitControls/> */}

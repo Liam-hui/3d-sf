@@ -25,14 +25,15 @@ const MouseObject = React.forwardRef( (props, ref) => {
   const [colliderRef, collider] = useBox(() => ({ 
     // mass: 1, 
     isKinematic: true,
-    args: [5, 2, 4], 
+    args: [5.5, 2, 4], 
     position: [0, Y_POS, 0], 
     onCollide: (e) => {
     }
   }))
 
-  const object = useGLTF(require('@/assets/glb/plane.glb').default)
+  const object = useGLTF(require('@/assets/glb/paper-plane.glb').default)
   useMemo(() => {
+    console.log(object)
     Object.values(object.nodes).forEach(obj => {
       obj.isMesh && Object.assign(obj, { castShadow: true })
     })
@@ -91,7 +92,7 @@ const MouseObject = React.forwardRef( (props, ref) => {
         camera.position.lerp({ x: targetRef.current.x, y: 13, z: targetRef.current.z + 15 }, 0.03)
 
       const routeObjects = scene.getObjectByName('routes').children.map(x => x.children[0])
-      const intersect = checkIntersect(meshRef.current, routeObjects)
+      const intersect = checkIntersect(colliderRef.current, routeObjects)
       if (intersect && isHomeRef.current) {
         goToRoute(intersect)
         isHomeRef.current = false
@@ -107,11 +108,11 @@ const MouseObject = React.forwardRef( (props, ref) => {
   return (
     <>
       <mesh ref={colliderRef} name="mouseObject"> 
-        <boxGeometry args={[5, 2, 4]}/>
-        <meshBasicMaterial color='red' transparent opacity={0.5}/>
+        <boxGeometry args={[5, 2, 5.5]}/>
+        <meshBasicMaterial color='red' transparent opacity={0}/>
       </mesh>
       <group ref={meshRef} rotation={[0, Math.PI, 0]}>
-        <group position={[0, Y_POS, 0]} rotation={[0, Math.PI * 0.5, 0]}>
+        <group position={[0, Y_POS, 0]} rotation={[0, Math.PI, 0]} scale={2.5}>
           {/* <pointLight castShadow position={[0, 9, 0]} intensity={1}/> */}
           <primitive object={object.scene} dispose={null} />
         </group>
