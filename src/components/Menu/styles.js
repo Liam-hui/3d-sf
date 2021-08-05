@@ -3,10 +3,11 @@ import styled from 'styled-components';
 export const MenuButton = styled.div`
     position: absolute;
     top: 2%;
-    right: 4%;
+    right: 2%;
     width: 35px;
     height: 35px;
     cursor: pointer;
+    pointer-events: auto;
 
     img {
         position: absolute;
@@ -35,11 +36,15 @@ export const MenuWrapper = styled.div`
     position: absolute;
     right: 0;
     height: 100%;
+    width: 100%;
+    pointer-events: none;
 `
 
 export const MenuContainer = styled.div`
     position: relative;
     width: 500px;
+    max-width: 70%;
+    margin-left: auto;
     height: 100%;
     background-color: white;
     transform: translateX(100%);

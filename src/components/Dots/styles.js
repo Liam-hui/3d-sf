@@ -1,4 +1,4 @@
-import styled from 'styled-components';
+import styled from 'styled-components'
 
 export const DotsContainer = styled.div`
     position: absolute;
@@ -9,18 +9,34 @@ export const DotsContainer = styled.div`
 `;
 
 export const Dot = styled.div`
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background-color: black;
-    margin-right: 12px;
-    transform: scale(0.8);
-    transition: transform 0.5s ease-in-out; 
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 
-    .is-focus & {
-        transform: scale(1);
+    * {
+        transform: scale(0.8);
+        transition: transform 0.4s ease-in-out; 
+        .is-focus & {
+            transform: scale(1);
+        }
     } 
+
+    div {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background-color: black;
+    }
+
+    img {
+        height: 100%;
+        width: 100%;
+        object-fit: contain;
+    }
 `;
 
 export const StyledItem = styled.div`

@@ -16,13 +16,19 @@ const LOCATIONS = [
 ]
 
 const Item = ({ location }) => {
-  
+
   const currentLocation = useSelector(state => state.location.current)
+
+  const onClick = () => {
+    store.dispatch({ type: 'SET_LOCATION', location: location })
+  }
 
   return (
     <StyledItem className={currentLocation == location ? 'is-focus' : ''}>
-      <Dot/>
-      <ItemName>{location}</ItemName>
+      <Dot onClick={onClick}>
+        {location == 'home' ? <img src={require('@/assets/icons/icon-home.svg').default}/> : <div/>}
+      </Dot>
+      {location != 'home' && <ItemName>{location}</ItemName>}
     </StyledItem>
   )
 }

@@ -1,12 +1,10 @@
-import React, { useMemo, useEffect, useRef, Suspense } from 'react'
-import { useLocation, useHistory } from "react-router-dom"
+import React from 'react'
+import store from '@/store'
 
 export default function About() {
 
-  const history = useHistory()
-
   const onClick = () => {
-    history.push('/')
+    store.dispatch({ type: 'SET_LOCATION', location: 'home' })
   }
 
   return (

@@ -7,7 +7,7 @@ import {
 export default function Logo() {
 
   return (
-    <StyledLogo src='/sf.webp' />
+    <StyledLogo src={require('@/assets/images/sf.webp').default} />
   )
 
 }

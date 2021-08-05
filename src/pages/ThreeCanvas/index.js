@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useCallback, Suspense } from 'react';
+import React, { useEffect, useRef, useCallback, Suspense } from 'react'
 import * as THREE from 'three'
-import store from '@/store';
+import store from '@/store'
 import { useSelector } from 'react-redux'
 import { isMobile } from "react-device-detect"
 import { Canvas, useThree, useFrame } from "@react-three/fiber"
-import { OrbitControls } from '@react-three/drei';
+import { OrbitControls } from '@react-three/drei'
 import { Physics, usePlane } from "@react-three/cannon"
 
 import {
@@ -16,19 +16,24 @@ import RouteObject from '@/components/RouteObject'
 import Box from '@/components/Box'
 
 
-const SCENE_DATA = {
+const LOCATION_DATA = {
   'home': {
+    pos: [0, 0, 0],
     color: '#012a36',
     cameraPos: null,
     cameraRot: [-Math.PI * 0.2, 0, 0]
   },
   'about': {
+    pos: [25, 0, -20],
+    rot: [0, -Math.PI * 0.2, 0],
     color: '#1d4f3d',
     cameraPos: new THREE.Vector3(4.67, 12.7, -4.51),
     cameraRot: [-0.754, -0.059, -0.056]
   },
   'projects': {
-    color: 'green',
+    pos: [-25, 0, -20],
+    rot: [0, Math.PI * 0.2, 0],
+    color: '#4f1d36',
     cameraPos: new THREE.Vector3(-5.83, 15.43, -6.89),
     cameraRot: [-0.7, 0.18, 0.15]
   }
@@ -37,13 +42,13 @@ const SCENE_DATA = {
 const mouse = new THREE.Vector2()
 const raycaster = new THREE.Raycaster()
 
-const Ground = ({ groundRef, sceneRef }) => {
+const Ground = ({ groundRef, locationDataRef }) => {
 
   const materialRef = useRef()
   const [planeRef] = usePlane(() => ({ mass: 0, rotation: [-Math.PI / 2, 0, 0], position: [0, 0, 0] }))
 
   useFrame(() => {
-    let color = new THREE.Color(sceneRef.current.color)
+    let color = new THREE.Color(locationDataRef.current.color)
     materialRef.current.color.lerp(color, 0.05)
   })
 
@@ -61,7 +66,7 @@ const Ground = ({ groundRef, sceneRef }) => {
   )
 }
 
-const Camera = ({ cameraRef, sceneRef }) => {
+const Camera = ({ cameraRef, locationDataRef }) => {
 
   const { size, set } = useThree()
 
@@ -70,11 +75,11 @@ const Camera = ({ cameraRef, sceneRef }) => {
   }, [])
 
   useFrame(() => {
-    if (sceneRef.current.cameraPos)
-      cameraRef.current.position.lerp(sceneRef.current.cameraPos, 0.03)
+    if (locationDataRef.current.cameraPos)
+      cameraRef.current.position.lerp(locationDataRef.current.cameraPos, 0.03)
 
     const quaternion = new THREE.Quaternion()
-    quaternion.setFromEuler(new THREE.Euler(sceneRef.current.cameraRot[0], sceneRef.current.cameraRot[1], sceneRef.current.cameraRot[2]))
+    quaternion.setFromEuler(new THREE.Euler(locationDataRef.current.cameraRot[0], locationDataRef.current.cameraRot[1], locationDataRef.current.cameraRot[2]))
     cameraRef.current.quaternion.slerp(quaternion, 0.05)
   })
 
@@ -101,8 +106,7 @@ const ThreeCanvas = () => {
   const mouseObjectRef = useRef()
   const cameraRef = useRef()
 
-  const sceneRef = useRef(SCENE_DATA['home'])
-  const mouseRef = useRef(null)
+  const locationDataRef = useRef(LOCATION_DATA['home'])
   const keyRef = useRef({})
 
   const preventDefault = useCallback((e) => { e.preventDefault() }, [])
@@ -119,8 +123,10 @@ const ThreeCanvas = () => {
       const intersects = raycaster.intersectObject(groundRef.current)
 
       if (intersects.length > 0) {
-        mouseRef.current = intersects[0].point
-        mouseRef.current.z += 5
+        const target = intersects[0].point
+        target.z += 5
+
+        mouseObjectRef.current && mouseObjectRef.current.goTo(target)
       }
     }
   }, [])
@@ -134,13 +140,11 @@ const ThreeCanvas = () => {
   }, [])
 
   const onMouseDown = (e) => {
-    // console.log(cameraRef.current)
     updateMousePosition(e)
     window.addEventListener("mousemove", updateMousePosition)
   }
 
   const onMouseUp = () => {
-    mouseRef.current = null
     window.removeEventListener("mousemove", updateMousePosition)
   }
 
@@ -158,15 +162,12 @@ const ThreeCanvas = () => {
   }, [location])
 
   useEffect(() => {
-    sceneRef.current = SCENE_DATA[location]
-
-    if (location == 'home') {
-      mouseObjectRef.current && mouseObjectRef.current.goBack()
-    }
-
+    locationDataRef.current = LOCATION_DATA[location]
+    const pos = locationDataRef.current.pos
+    mouseObjectRef.current && mouseObjectRef.current.goTo(new THREE.Vector3(pos[0], pos[1], pos[2]), location)
   }, [location])
 
-  const goToRoute = (location) => {
+  const goToLocation = (location) => {
     store.dispatch({ type: 'SET_LOCATION', location: location })
   }
 
@@ -179,7 +180,7 @@ const ThreeCanvas = () => {
       onTouchStart={isMobile ? onTouchStart : null}
     >
       <Canvas shadows>
-        <Camera cameraRef={cameraRef} sceneRef={sceneRef}/>
+        <Camera cameraRef={cameraRef} locationDataRef={locationDataRef}/>
         <color attach="background" args={['white']} />
         <ambientLight intensity={1} />
         <spotLight 
@@ -206,11 +207,12 @@ const ThreeCanvas = () => {
             gravity={[0, -10, 0]}
             // allowSleep={false}
           >
-            <Ground groundRef={groundRef} sceneRef={sceneRef}/>
-            <MouseObject ref={mouseObjectRef} mouseRef={mouseRef} keyRef={keyRef} goToRoute={goToRoute} />
+            <Ground groundRef={groundRef} locationDataRef={locationDataRef}/>
+            <MouseObject ref={mouseObjectRef} keyRef={keyRef} currentLocation={location} goToLocation={goToLocation} />
             <group name="routes">
-              <RouteObject position={[25, 0, -20]} rotation={[0, -Math.PI * 0.2, 0]} name='about' />
-              <RouteObject position={[-25, 0, -20]} rotation={[0, Math.PI * 0.2, 0]} name='projects' />
+              {Object.entries(LOCATION_DATA).slice(1).map(([location, { pos, rot } ])=> {
+                return <RouteObject position={pos} rotation={rot} name={location} />
+              })}
             </group>
             <Box position={[-15, 0, 10]} rotation={[0, -Math.PI * 0.2, 0]}/>
             <Box position={[20, 0, 20]} />

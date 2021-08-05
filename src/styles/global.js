@@ -16,7 +16,9 @@ const GlobalStyle = createGlobalStyle`
     text-rendering: optimizeLegibility !important;
     -webkit-font-smoothing: antialiased !important;
   }
-  body, #root {
+  html, body, #root {
+    width: 100%;
+    height: 100%;
     overflow: hidden;
   }
   body, input, textarea {
@@ -51,6 +53,10 @@ const GlobalStyle = createGlobalStyle`
     .page-content {
       width: 50%;
       padding: 7% 10%;
+
+      &.is-right {
+        margin-left: auto;
+      }
     }
     h2 {
       font-family: roboto slab,helvetica,arial,sans-serif;
